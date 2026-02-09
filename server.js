@@ -8,6 +8,7 @@ const logger = require('morgan');
 const authRoutes = require('./controllers/auth')
 const userRoutes = require('./controllers/user');
 const verifyToken = require('./middleware/verify-token');
+const beerRoutes = require('./controllers/beer')
 
 mongoose.connect(process.env.MONGODB_URI);
 
@@ -25,6 +26,7 @@ app.use('/users', userRoutes)
 
 // Any routes below this would require AUTH
 app.use(verifyToken) 
+app.use('/beer', beerRoutes)
 
 
 

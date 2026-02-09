@@ -9,7 +9,7 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    beerlist: [
+    beerList: [
         {
             type: mongoose.Schema.Types.ObjectId, ref: "Beer",
         },

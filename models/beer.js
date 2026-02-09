@@ -11,7 +11,7 @@ const locationSchema = new mongoose.Schema(
             data: Buffer,
             contentType: String,
         },
-        BeerPrice: {
+        beerPrice: {
             type: Number,
             required: true,
             min: 0,
@@ -21,7 +21,7 @@ const locationSchema = new mongoose.Schema(
             enum: [1, 2, 3, 4, 5],
             required: true,
         },
-        comment: String,
+        notes: String,
     },
     { timestamps: true }
 );
