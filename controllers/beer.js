@@ -55,7 +55,7 @@ router.get('/:beerId',  async (req, res) => {
   try {
     const beer = await Beer.findById(req.params.beerId).populate([
       "owner",
-      "comments.owner",
+      // "comments.owner",
     ]);
     if (!beer) {
       res.status(404);
