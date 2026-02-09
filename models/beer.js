@@ -18,7 +18,7 @@ const locationSchema = new mongoose.Schema(
         },
         beerRating: {
             type: Number,
-            enum: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+            enum: [1, 2, 3, 4, 5],
             required: true,
         },
         comment: String,
