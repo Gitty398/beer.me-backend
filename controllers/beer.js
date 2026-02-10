@@ -136,8 +136,6 @@ router.put('/:beerId', async (req, res) => {
   }
 });
 
-/// NEW /////////////////////////////////////////////////////////////////////////////////////////////////////
-
 // Create Location
 router.post('/:beerId/location/', async (req, res) => {
   try {
@@ -213,6 +211,45 @@ router.delete('/:beerId/location/:locationId', async (req, res) => {
     res.redirect(`/${req.params.beerId}/`);
   } catch (error) {
     console.error('[DELETE /:beerId/location/:locationId] Error:', error);
+    res.redirect('/');
+  }
+});
+
+// Update Location
+router.put('/:beerId/location/:locationId', async (req, res) => {
+  try {
+    const beer = await Beer.findById(req.params.beerId);
+    if (!beer.owner.equals(req.user._id)) {
+      res.status(403);
+      throw new Error(`You can only edit beers you own`);
+    }
+
+    const index = beer.location.findIndex(loc => loc.id === req.params.locationId);
+    const loc = beer.location[index];
+    const { name, address, locationImage, beerPrice, beerRating, notes } = req.body;
+
+    if (!name) {
+      return res.status(400).send('Location name is required');
+    }
+    
+    loc.name = String(name).trim();
+    if (address) { loc.address = String(address).trim(); } 
+    if (locationImage) { loc.locationImage = String(locationImage).trim(); }
+    if (beerPrice) { loc.beerPrice = Number(beerPrice); }
+    if (beerRating) { loc.beerRating = Number(beerRating); }
+    if (notes) { loc.notes = String(notes).trim(); }
+
+    beer.location[index] = loc;
+
+    await Beer.findByIdAndUpdate(
+      req.params.beerId,
+      beer,
+      { new: true },
+    );
+
+    res.status(201).json({ beer });
+  } catch (error) {
+    console.error('[PUT /:workoutId/exercises/:exerciseId] Error:', error);
     res.redirect('/');
   }
 });
