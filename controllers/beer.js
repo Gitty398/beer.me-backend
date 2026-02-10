@@ -5,7 +5,6 @@ const User = require ("../models/user")
 const CATEGORIES = ['Ale', 'Lager']
 
 // Index
-
 router.get('/', async (req, res) => {
   try {
     const beers = await Beer.find()
@@ -18,8 +17,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-//Create
-
+//Create Beer
 router.post('/',  async (req, res) => {
   try {
     if (!CATEGORIES.includes(req.body.category)) {
@@ -49,8 +47,7 @@ router.post('/',  async (req, res) => {
   }
 });
 
-// Show
-
+// Show Beer
 router.get('/:beerId',  async (req, res) => {
   try {
     const beer = await Beer.findById(req.params.beerId).populate([
@@ -74,8 +71,7 @@ router.get('/:beerId',  async (req, res) => {
   }
 });
 
-// Delete
-
+// Delete Beer
 router.delete('/:beerId', async (req, res) => {
   try {
     const beerToDelete = await Beer.findById(req.params.beerId);
@@ -99,8 +95,7 @@ router.delete('/:beerId', async (req, res) => {
   }
 });
 
-// Update
-
+// Update Beer
 router.put('/:beerId', async (req, res) => {
   try {
     const foundBeer = await Beer.findById(req.params.beerId);
@@ -138,6 +133,87 @@ router.put('/:beerId', async (req, res) => {
     } else {
       res.status(500).json({ err: error.message });
     }
+  }
+});
+
+/// NEW /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// Create Location
+router.post('/:beerId/location/', async (req, res) => {
+  try {
+    const beer = await Beer.findById(req.params.beerId);
+    if (!beer.owner.equals(req.user._id)) {
+      res.status(403);
+      throw new Error(`You can only edit beers you own`);
+    }
+
+    const { name, address, locationImage, beerPrice, beerRating, notes } = req.body;
+
+    if (!name) {
+      return res.status(400).send('Location name is required');
+    }
+
+    const locations = []; 
+    if (name && name.trim().length) { 
+      locations.push({
+        name: String(name).trim(),
+        address: address !== undefined && address !== '' ? String(address).trim() : undefined,
+        locationImage: locationImage !== undefined && locationImage !== '' ? String(locationImage).trim() : undefined,
+        beerPrice: beerPrice !== undefined && beerPrice !== '' ? Number(beerPrice) : undefined,
+        beerRating: beerRating !== undefined && beerRating !== '' ? Number(beerRating) : undefined,
+        notes: notes !== undefined && notes !== '' ? String(notes).trim() : undefined,
+      });
+    }
+    
+    const banana = beer.location.create({
+      name: locations[0].name,
+      address: locations[0].address,
+      locationImage: locations[0].locationImage,
+      beerPrice: locations[0].beerPrice,
+      beerRating: locations[0].beerRating,
+      notes: locations[0].notes,
+    });
+  
+    beer.location.push(banana);
+
+    await Beer.findByIdAndUpdate(
+      req.params.beerId,
+      beer,
+      { new: true },
+    );
+
+    res.status(201).json({ beer });
+  } catch (error) {
+    console.error('[POST /:beerId/location] Error:', error);
+    res.redirect('/');
+  }
+});
+
+// Delete Location
+router.delete('/:beerId/location/:locationId', async (req, res) => {
+  try {
+    const beer = await Beer.findById(req.params.beerId);
+    if (!beer.owner.equals(req.user._id)) {
+      res.status(403);
+      throw new Error(`You can only edit beers you own`);
+    }
+
+    const index = beer.location.findIndex(loc => loc.id === req.params.locationId);
+
+    if (index !== -1) {
+      beer.location.splice(index, 1);
+    }
+
+    await Beer.findByIdAndUpdate(
+      req.params.beerId,
+      beer,
+      { new: true },
+    );
+
+    res.redirect(`/${req.params.beerId}/`);
+  } catch (error) {
+    console.error('[DELETE /:beerId/location/:locationId] Error:', error);
+    res.redirect('/');
   }
 });
 
