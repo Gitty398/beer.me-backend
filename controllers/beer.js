@@ -136,6 +136,28 @@ router.put('/:beerId', async (req, res) => {
   }
 });
 
+// Show Location
+router.get('/:beerId/location/:locationId',  async (req, res) => {
+  try {
+    const beer = await Beer.findById(req.params.beerId);
+    if (!beer.owner.equals(req.user._id)) {
+      res.status(403);
+      throw new Error(`You can only edit beers you own`);
+    }
+
+    const index = beer.location.findIndex(loc => loc.id === req.params.locationId);
+    const loc = beer.location[index];
+
+    res.status(200).json(loc);
+  } catch (error) {
+    if (res.statusCode === 404) {
+      res.json({ err: error.message });
+    } else {
+      res.status(500).json({ err: error.message });
+    }
+  }
+});
+
 // Create Location
 router.post('/:beerId/location/', async (req, res) => {
   try {
