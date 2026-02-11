@@ -271,7 +271,7 @@ router.put('/:beerId/location/:locationId', async (req, res) => {
 
     res.status(201).json({ beer });
   } catch (error) {
-    console.error('[PUT /:workoutId/exercises/:exerciseId] Error:', error);
+    console.error('[PUT /:beerId/location/:locationId] Error:', error);
     res.redirect('/');
   }
 });
