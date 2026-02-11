@@ -5,11 +5,11 @@ const locationSchema = new mongoose.Schema(
     {
         name: {
             type: String,
-            required: true
+            required: false
         },
         address: {
             type: String,
-            required: true
+            required: false
         },
         locationImage: {
             data: Buffer,
@@ -17,13 +17,13 @@ const locationSchema = new mongoose.Schema(
         },
         beerPrice: {
             type: Number,
-            required: true,
+            required: false,
             min: 0,
         },
         beerRating: {
             type: Number,
             enum: [1, 2, 3, 4, 5],
-            required: true,
+            required: false,
         },
         notes: String,
     },

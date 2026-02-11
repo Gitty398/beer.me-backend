@@ -2,6 +2,7 @@ const dotenv = require('dotenv');
 dotenv.config();
 const express = require('express');
 const app = express();
+const PORT = process.env.PORT || 3000;
 const mongoose = require('mongoose');
 const cors = require('cors');
 const logger = require('morgan');
@@ -25,11 +26,11 @@ app.use('/auth', authRoutes)
 app.use('/users', userRoutes)
 
 // Any routes below this would require AUTH
-app.use(verifyToken) 
+app.use(verifyToken)
 app.use('/beer', beerRoutes)
 
 
 
-app.listen(3000, () => {
-  console.log('The express app is ready!');
+app.listen(PORT, () => {
+  console.log('The express app is ready on', PORT);
 });
