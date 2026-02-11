@@ -230,7 +230,7 @@ router.delete('/:beerId/location/:locationId', async (req, res) => {
       { new: true },
     );
 
-    res.redirect(`/${req.params.beerId}/`);
+    res.status(200).json(beer);
   } catch (error) {
     console.error('[DELETE /:beerId/location/:locationId] Error:', error);
     res.redirect('/');
