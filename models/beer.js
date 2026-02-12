@@ -26,6 +26,11 @@ const locationSchema = new mongoose.Schema(
             required: false,
         },
         notes: String,
+        beerCount: {
+            type: Number,
+            required: false,
+            min: 0,
+        }
     },
     { timestamps: true }
 );
