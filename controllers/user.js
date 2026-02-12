@@ -5,9 +5,8 @@ const verifyToken = require("../middleware/verify-token");
 // Index (non-authenticated) GET /users
 router.get("/", async (req, res) => {
   try {
-    // find all the users
     const users = await User.find({});
-    // send back all the user
+
     res.status(200).json({ users });
   } catch (error) {
     res.status(500).json({ err: error.message });
