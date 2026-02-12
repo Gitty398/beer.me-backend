@@ -36,7 +36,6 @@ app.use(logger("dev"));
 app.use(cors(corsOptions));
 app.options(/.*/, cors(corsOptions));
 
-
 app.use(express.json());
 
 app.get("/health", (req, res) => res.status(200).send("ok"));
@@ -44,14 +43,11 @@ app.get("/health", (req, res) => res.status(200).send("ok"));
 
 // Routes go here
 app.use('/auth', authRoutes)
-app.use('/users', userRoutes)
-
 
 // Any routes below this would require AUTH
 app.use(verifyToken)
 app.use('/beer', beerRoutes)
-
-
+app.use('/users', userRoutes)
 
 app.listen(PORT, () => {
   console.log('The express app is ready on', PORT);

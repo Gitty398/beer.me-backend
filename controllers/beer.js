@@ -26,10 +26,6 @@ router.post('/',  async (req, res) => {
       );
     }
 
-    // if (!req.body.text.trim() || !req.body.title.trim()) {
-    //   throw new Error(`The body and title fields must have valid text`);
-    // }
-
     req.body.owner = req.user._id;
     const beer = await Beer.create(req.body);
     
@@ -52,7 +48,6 @@ router.get('/:beerId',  async (req, res) => {
   try {
     const beer = await Beer.findById(req.params.beerId).populate([
       "owner",
-      // "comments.owner",
     ]);
     if (!beer) {
       res.status(404);
@@ -109,10 +104,6 @@ router.put('/:beerId', async (req, res) => {
         `${req.body.category} is not a valid category. Please provide one of: ${CATEGORIES.join(", ")}`,
       );
     }
-
-    // if (!req.body.text.trim() || !req.body.title.trim()) {
-    //   throw new Error(`The body and title fields must have valid text`);
-    // }
 
     const updatedBeer = await Beer.findByIdAndUpdate(
       req.params.beerId,
