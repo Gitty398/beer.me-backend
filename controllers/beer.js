@@ -167,7 +167,7 @@ router.post('/:beerId/location/', async (req, res) => {
       throw new Error(`You can only edit beers you own`);
     }
 
-    const { name, address, locationImage, beerPrice, beerRating, notes } = req.body;
+    const { name, address, locationImage, beerPrice, beerRating, notes, beerCount } = req.body;
 
     if (!name) {
       return res.status(400).send('Location name is required');
@@ -182,6 +182,7 @@ router.post('/:beerId/location/', async (req, res) => {
         beerPrice: beerPrice !== undefined && beerPrice !== '' ? Number(beerPrice) : undefined,
         beerRating: beerRating !== undefined && beerRating !== '' ? Number(beerRating) : undefined,
         notes: notes !== undefined && notes !== '' ? String(notes).trim() : undefined,
+        beerCount: beerCount !== undefined && beerCount !== '' ? Number(beerCount) : undefined,
       });
     }
     
@@ -192,6 +193,7 @@ router.post('/:beerId/location/', async (req, res) => {
       beerPrice: locations[0].beerPrice,
       beerRating: locations[0].beerRating,
       notes: locations[0].notes,
+      beerCount: locations[0].beerCount,
     });
   
     beer.location.push(banana);
@@ -248,7 +250,7 @@ router.put('/:beerId/location/:locationId', async (req, res) => {
 
     const index = beer.location.findIndex(loc => loc.id === req.params.locationId);
     const loc = beer.location[index];
-    const { name, address, locationImage, beerPrice, beerRating, notes } = req.body;
+    const { name, address, locationImage, beerPrice, beerRating, notes, beerCount } = req.body;
 
     if (!name) {
       return res.status(400).send('Location name is required');
@@ -260,6 +262,7 @@ router.put('/:beerId/location/:locationId', async (req, res) => {
     if (beerPrice) { loc.beerPrice = Number(beerPrice); }
     if (beerRating) { loc.beerRating = Number(beerRating); }
     if (notes) { loc.notes = String(notes).trim(); }
+    if (beerCount) { loc.beerCount = Number(beerCount); }
 
     beer.location[index] = loc;
 
