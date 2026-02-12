@@ -262,7 +262,7 @@ router.put('/:beerId/location/:locationId', async (req, res) => {
       beer,
       { new: true },
     );
-
+    beer._doc.owner = req.user
     res.status(201).json({ beer });
   } catch (error) {
     console.error('[PUT /:beerId/location/:locationId] Error:', error);
