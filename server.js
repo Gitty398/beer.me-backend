@@ -28,12 +28,13 @@ const corsOptions = {
   allowedHeaders: ["Content-Type", "Authorization"],
 };
 
+app.use(logger("dev"));
+
 app.use(cors(corsOptions));
 app.options(/.*/, cors(corsOptions));
 
 
 app.use(express.json());
-app.use(logger('dev'));
 
 app.get("/health", (req, res) => res.status(200).send("ok"));
 
