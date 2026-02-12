@@ -1,17 +1,25 @@
 const jwt = require("jsonwebtoken");
 
 function verifyToken(req, res, next) {
-  try {
-    const token = req.headers.authorization.split(" ")[1];
-    // decoded will return a error or the payload from the token
-    const decoded = jwt.verify(token, process.env.SECRET);
-    // add users info (username, _id) onto the request so we can use it
-    // in tings like Task.find({owner: req.user._id})
-    req.user = decoded.payload
+  // Let CORS preflight requests pass through
+  if (req.method === "OPTIONS") return next();
 
-    next()
+  // Let load balancer health checks pass through (if you use /health)
+  if (req.path === "/health") return next();
+
+  const authHeader = req.headers.authorization; // "Bearer <token>"
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return res.status(401).json({ err: "Missing or invalid Authorization header" });
+  }
+
+  const token = authHeader.split(" ")[1];
+
+  try {
+    const decoded = jwt.verify(token, process.env.SECRET);
+    req.user = decoded.payload; // matches how you sign it
+    return next();
   } catch (error) {
-    res.status(401).json({err: error.message})
+    return res.status(401).json({ err: error.message });
   }
 }
 
