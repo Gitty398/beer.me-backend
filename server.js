@@ -20,6 +20,9 @@ mongoose.connection.on('connected', () => {
 
 const allowedOrigins = [
   "https://main.d1yyzdi58s6yy8.amplifyapp.com",
+  "http://127.0.0.1:5173",
+  "http://localhost:5173",
+  
 ];
 
 const corsOptions = {
